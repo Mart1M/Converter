@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style id="figma-style"></style>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+        justify-content: flex-start;
+        height: 100vh;
+        margin: 0;
+        background-color: var(--figma-color-bg);
+        color: var(--figma-color-text);
+        padding: 0 16px;
+        overflow: hidden;
+        font-family: Inter, sans-serif;
+      }
+      button {
+        padding: 8px 16px;
+        font-size: 14px;
+        font-family: Inter, sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 6px;
+        border: none;
+        color: var(--figma-color-text-onbrand);
+        background-color: var(--figma-color-bg-brand);
+        width: 100%;
+      }
+      .btn-text {
+        border: var(--figma-color-border-disabled) 1px solid;
+        color: var(--figma-color-text-disabled);
+        background-color: var(--figma-color-bg-disabled);
+      }
+      button:hover {
+        background-color: var(--figma-color-bg-brand-hover);
+      }
+      .btn-text:hover {
+        background-color: var(--figma-color-bg-disabled);
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Convert color styles to variables</h2>
+    <button id="run-styles" class="btn-styles">Convert styles</button>
+    <button id="" class="btn-text" disabled>Convert Text styles</button>
+    <script>
+      document.getElementById("run-styles").addEventListener("click", () => {
+        // Envoyez un message au code du plugin
+        parent.postMessage({ pluginMessage: { type: "run-styles" } }, "*");
+      });
+    </script>
+  </body>
+</html>
