@@ -3,55 +3,123 @@
   <head>
     <meta charset="UTF-8" />
     <style id="figma-style"></style>
+    <!-- Standard link tag-->
+<link rel="stylesheet" href="node_modules/figma-plugin-ds/dist/figma-plugin-ds.css">
     <style>
+      * {
+        box-sizing: border-box; /* Ajoutez cela pour que padding et border soient inclus dans la largeur et la hauteur */
+      }
       body {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 16px;
         align-items: flex-start;
         justify-content: flex-start;
         height: 100vh;
         margin: 0;
         background-color: var(--figma-color-bg);
         color: var(--figma-color-text);
-        padding: 0 16px;
         overflow: hidden;
         font-family: Inter, sans-serif;
-      }
-      button {
-        padding: 8px 16px;
-        font-size: 14px;
-        font-family: Inter, sans-serif;
-        font-weight: 500;
-        cursor: pointer;
-        border-radius: 6px;
-        border: none;
-        color: var(--figma-color-text-onbrand);
-        background-color: var(--figma-color-bg-brand);
+        padding-top: 16px;
         width: 100%;
       }
-      .btn-text {
-        border: var(--figma-color-border-disabled) 1px solid;
+      .btn{
+  display: flex;
+  width: 100%;
+  padding: 8px 14px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: var(--figma-color-text);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--figma-color-border);
+  background: var(--figma-color-bg);
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  cursor: pointer;
+}
+      .buttons{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 100%; /* Modifié pour s'adapter à la largeur du conteneur parent */
+        padding: 0 16px;
+      }
+      .disabled{
         color: var(--figma-color-text-disabled);
-        background-color: var(--figma-color-bg-disabled);
+        cursor: not-allowed;
       }
-      button:hover {
-        background-color: var(--figma-color-bg-brand-hover);
+      .divider{
+        background: var(--figma-color-border);
+        width: 100%;
+        height: 1px;
       }
-      .btn-text:hover {
-        background-color: var(--figma-color-bg-disabled);
+      .title{
+        margin: 0 16px;
+      }
+      h2{
+        margin: 8px 0;
       }
     </style>
   </head>
   <body>
-    <h2>Convert color styles to variables</h2>
-    <button id="run-styles" class="btn-styles">Convert styles</button>
-    <button id="" class="btn-text" disabled>Convert Text styles</button>
+    <div class="title">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="6" fill="var(--figma-color-bg-inverse)"/>
+      <path d="M20.9 15.9958C20.9 16.7611 20.2732 17.3815 19.5 17.3815C18.7268 17.3815 18.1 16.7611 18.1 15.9958C18.1 15.2306 18.7268 14.6102 19.5 14.6102C20.2732 14.6102 20.9 15.2306 20.9 15.9958Z" fill="var(--figma-color-bg)"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M19.5 8L26.5 12V20L19.5 24L12.5 20V12L19.5 8ZM13.9 12.8L19.5 9.6L25.1 12.8V19.2L19.5 22.4L13.9 19.2V12.8Z" fill="var(--figma-color-bg)"/>
+      <path d="M5.125 17.6249H11.2019L9.99848 18.8284C9.36387 19.463 9.36387 20.4919 9.99848 21.1265C10.6331 21.7611 11.662 21.7611 12.2966 21.1265L16.274 17.149L15.5669 16.4419L16.2741 17.149C16.9086 16.5144 16.9086 15.4855 16.2741 14.8509L15.5669 15.558L16.274 14.8509L12.2966 10.8734C11.662 10.2388 10.6331 10.2388 9.99848 10.8734C9.36387 11.508 9.36387 12.5369 9.99848 13.1715L11.2019 14.3749H5.125C4.22754 14.3749 3.5 15.1025 3.5 15.9999C3.5 16.8974 4.22754 17.6249 5.125 17.6249Z" fill="var(--figma-color-bg)" stroke="var(--figma-color-bg-inverse)" stroke-width="2"/>
+    </svg>
+    
+      <h2>Convert color styles to variables</h2>
+    </div>      
+    <div class="divider"></div>
+    <div class="buttons">
+      <button id="run-styles" class="btn btn-styles">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_139_5964)">
+          <path d="M1.66663 10.0001C1.66663 14.6025 5.39759 18.3334 9.99996 18.3334C11.3807 18.3334 12.5 17.2141 12.5 15.8334V15.4167C12.5 15.0297 12.5 14.8362 12.5213 14.6738C12.669 13.5519 13.5518 12.6692 14.6736 12.5215C14.8361 12.5001 15.0296 12.5001 15.4166 12.5001H15.8333C17.214 12.5001 18.3333 11.3808 18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 9.99996 1.66675C5.39759 1.66675 1.66663 5.39771 1.66663 10.0001Z" stroke="var(--figma-color-text)" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5.83329 10.8334C6.29353 10.8334 6.66663 10.4603 6.66663 10.0001C6.66663 9.53984 6.29353 9.16675 5.83329 9.16675C5.37306 9.16675 4.99996 9.53984 4.99996 10.0001C4.99996 10.4603 5.37306 10.8334 5.83329 10.8334Z" stroke="var(--figma-color-text)" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M13.3333 7.50008C13.7935 7.50008 14.1666 7.12699 14.1666 6.66675C14.1666 6.20651 13.7935 5.83341 13.3333 5.83341C12.8731 5.83341 12.5 6.20651 12.5 6.66675C12.5 7.12699 12.8731 7.50008 13.3333 7.50008Z" stroke="var(--figma-color-text)" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8.33329 6.66675C8.79353 6.66675 9.16663 6.29365 9.16663 5.83341C9.16663 5.37318 8.79353 5.00008 8.33329 5.00008C7.87306 5.00008 7.49996 5.37318 7.49996 5.83341C7.49996 6.29365 7.87306 6.66675 8.33329 6.66675Z" stroke="var(--figma-color-text)" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <defs>
+          <clipPath id="clip0_139_5964">
+          <rect width="20" height="20" fill="white"/>
+          </clipPath>
+          </defs>
+          </svg>        
+        Convert color styles
+      </button>
+      <button id="" class="btn btn-text disabled" disabled>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.66667 5.83333H13.3333M10 5.83333V14.1667M6.5 17.5H13.5C14.9001 17.5 15.6002 17.5 16.135 17.2275C16.6054 16.9878 16.9878 16.6054 17.2275 16.135C17.5 15.6002 17.5 14.9001 17.5 13.5V6.5C17.5 5.09987 17.5 4.3998 17.2275 3.86502C16.9878 3.39462 16.6054 3.01217 16.135 2.77248C15.6002 2.5 14.9001 2.5 13.5 2.5H6.5C5.09987 2.5 4.3998 2.5 3.86502 2.77248C3.39462 3.01217 3.01217 3.39462 2.77248 3.86502C2.5 4.3998 2.5 5.09987 2.5 6.5V13.5C2.5 14.9001 2.5 15.6002 2.77248 16.135C3.01217 16.6054 3.39462 16.9878 3.86502 17.2275C4.3998 17.5 5.09987 17.5 6.5 17.5Z" stroke="var(--figma-color-text-disabled)" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>        
+        Convert text styles (soon)
+      </button>
+    </div>
+<script>
+    selectMenu.init(); //initiates the select menu component
+    disclosure.init(); //initiates the disclosure component
+</script>
     <script>
       document.getElementById("run-styles").addEventListener("click", () => {
-        // Envoyez un message au code du plugin
+        // Envoyez un message au code du plugin pour exécuter la fonction runStyles()
         parent.postMessage({ pluginMessage: { type: "run-styles" } }, "*");
       });
+    
+      document.getElementById("replace-styles").addEventListener("click", () => {
+        // Envoyez un message au code du plugin pour exécuter la fonction replaceStylesWithVariables()
+        parent.postMessage({ pluginMessage: { type: "replace-styles" } }, "*");
+      });
     </script>
+    
   </body>
 </html>

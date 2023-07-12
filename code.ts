@@ -1,8 +1,9 @@
-figma.showUI(__html__, { themeColors: true, height: 300 });
+figma.showUI(__html__, { themeColors: true, height: 300, width: 300 });
+
 // Fonction pour exécuter le plugin
 function runStyles() {
-  // Créez une nouvelle collection de variables nommée "color"
-  const colorCollection = figma.variables.createVariableCollection("color");
+  // Créez une nouvelle collection de variables nommée "colors"
+  const colorCollection = figma.variables.createVariableCollection("colors");
 
   // Récupérez tous les styles locaux de couleur dans le fichier actuel
   const localColorStyles = figma.getLocalPaintStyles();
@@ -24,9 +25,9 @@ function runStyles() {
       );
     }
   }
+  // Envoyez une notification pour informer l'utilisateur que le plugin a été exécuté avec succès
+  figma.notify("Styles have been converted successfully! Collection name: 'colors' ");
 
-  // Fermez le plugin
-  figma.closePlugin();
 }
 
 // Écoutez les messages du code de l'interface utilisateur
