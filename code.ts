@@ -1,39 +1,95 @@
 figma.showUI(__html__, { themeColors: true, height: 300, width: 300 });
 
-// Fonction pour exécuter le plugin
-function runStyles() {
-  // Créez une nouvelle collection de variables nommée "colors"
+
+
+async function runStyles() {
+
   const colorCollection = figma.variables.createVariableCollection("colors");
 
-  // Récupérez tous les styles locaux de couleur dans le fichier actuel
-  const localColorStyles = figma.getLocalPaintStyles();
-
-  // Parcourez chaque style de couleur local et créez une variable correspondante dans la collection "color"
+  const localColorStyles = await figma.getLocalPaintStylesAsync();
   for (let style of localColorStyles) {
-    // Vérifiez si le style de couleur a un remplissage solide
     if (style.paints[0].type === "SOLID") {
-      // Utilisez le nom du style (en minuscule) comme nom de la variable
       let variable = figma.variables.createVariable(
         style.name.toLowerCase(),
         colorCollection.id,
         "COLOR"
       );
-      // Définir la valeur de la variable à style.paints[0].color
       variable.setValueForMode(
         colorCollection.defaultModeId,
         style.paints[0].color
       );
     }
   }
-  // Envoyez une notification pour informer l'utilisateur que le plugin a été exécuté avec succès
   figma.notify("Styles have been converted successfully! Collection name: 'colors' ");
 
 }
 
-// Écoutez les messages du code de l'interface utilisateur
+async function runTextStyles() {
+  const localTextStyles = await figma.getLocalTextStylesAsync();
+    const textCollection = figma.variables.createVariableCollection("textStyles");
+    const modeId = textCollection.modes[0].modeId;
+
+    localTextStyles.forEach(style => {
+        if (style.fontName && style.fontName.family && style.fontName.family.trim() !== '') {
+            createVariable(`${style.name}/fontFamily`, textCollection, modeId, style.fontName.family, 'STRING');
+        }
+        if (style.fontName && style.fontName.style && style.fontName.style.trim() !== '') {
+            createVariable(`${style.name}/fontStyle`, textCollection, modeId, style.fontName.style, 'STRING');
+        }
+
+        const fontWeight = parseFontWeight(style.fontName.style);
+        if (fontWeight !== undefined) {
+            createVariable(`${style.name}/fontWeight`, textCollection, modeId, fontWeight, 'FLOAT');
+        }
+
+        if (typeof style.fontSize === 'number') {
+            createVariable(`${style.name}/fontSize`, textCollection, modeId, style.fontSize, 'FLOAT');
+        }
+
+        if (style.letterSpacing && !isNaN(style.letterSpacing.value)) {
+            createVariable(`${style.name}/letterSpacing`, textCollection, modeId, style.letterSpacing.value, 'FLOAT');
+        }
+        if (style.lineHeight && typeof style.lineHeight === 'object') {
+    if ('value' in style.lineHeight && !isNaN(style.lineHeight.value)) {
+        createVariable(`${style.name}/lineHeight`, textCollection, modeId, style.lineHeight.value, 'FLOAT');
+    }
+}
+
+    });
+
+  console.log("Variables created for each text style property in the 'textStyles' collection.");
+  figma.notify("Text styles have been converted successfully! Collection name: 'textStyles' ");
+}
+
+function createVariable(name: any, collection: any, modeId: any, value: any, type: any) {
+  const resolvedType = type;
+  const variable = figma.variables.createVariable(name, collection, resolvedType);
+  variable.setValueForMode(modeId, value);
+  return variable;
+}
+
+type FontWeightStyle = "Thin" | "ExtraLight" | "Light" | "Regular" | "Medium" | "SemiBold" | "Bold" | "ExtraBold" | "Black";
+
+function parseFontWeight(fontStyle: FontWeightStyle): number | undefined {
+    const weightMap: { [key in FontWeightStyle]: number } = {
+        "Thin": 100,
+        "ExtraLight": 200,
+        "Light": 300,
+        "Regular": 400,
+        "Medium": 500,
+        "SemiBold": 600,
+        "Bold": 700,
+        "ExtraBold": 800,
+        "Black": 900
+    };
+    return weightMap[fontStyle] || undefined;
+}
+
+
 figma.ui.onmessage = (message) => {
   if (message.type === "run-styles") {
-    // Exécutez le plugin lorsque le message "run-styles" est reçu de l'interface utilisateur
     runStyles();
+  } else if (message.type === 'run-text-styles') {
+    runTextStyles();
   }
 };
