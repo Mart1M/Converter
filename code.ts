@@ -45,14 +45,30 @@ async function runTextStyles() {
         if (typeof style.fontSize === 'number') {
             createVariable(`${style.name}/fontSize`, textCollection, modeId, style.fontSize, 'FLOAT');
         }
+      
+      if (typeof style.paragraphSpacing === 'number') {
+            createVariable(`${style.name}/paragraphSpacing`, textCollection, modeId, style.paragraphSpacing, 'FLOAT');
+        }
+      
+      
 
         if (style.letterSpacing && !isNaN(style.letterSpacing.value)) {
             createVariable(`${style.name}/letterSpacing`, textCollection, modeId, style.letterSpacing.value, 'FLOAT');
         }
-        if (style.lineHeight && typeof style.lineHeight === 'object') {
-    if ('value' in style.lineHeight && !isNaN(style.lineHeight.value)) {
-        createVariable(`${style.name}/lineHeight`, textCollection, modeId, style.lineHeight.value, 'FLOAT');
+      
+      if (style.lineHeight && typeof style.lineHeight === 'object') {
+    let lineHeightValue: number;  // Pour stocker la valeur calculée du lineHeight
+
+    if ('value' in style.lineHeight && style.lineHeight.unit !== 'AUTO') {
+        if (style.lineHeight.unit === 'PERCENT') {
+            lineHeightValue = style.fontSize * (style.lineHeight.value / 100);
+        } else {
+            lineHeightValue = style.lineHeight.value;
+        }
+    } else {
+        lineHeightValue = style.fontSize;
     }
+    createVariable(`${style.name}/lineHeight`, textCollection, modeId, lineHeightValue.toString(), 'STRING');
 }
 
     });
