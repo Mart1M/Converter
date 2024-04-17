@@ -57,7 +57,7 @@ async function runTextStyles() {
         }
       
       if (style.lineHeight && typeof style.lineHeight === 'object') {
-    let lineHeightValue: number;  // Pour stocker la valeur calculée du lineHeight
+    let lineHeightValue: number;
 
     if ('value' in style.lineHeight && style.lineHeight.unit !== 'AUTO') {
         if (style.lineHeight.unit === 'PERCENT') {
@@ -68,7 +68,8 @@ async function runTextStyles() {
     } else {
         lineHeightValue = style.fontSize;
     }
-    createVariable(`${style.name}/lineHeight`, textCollection, modeId, lineHeightValue.toString(), 'STRING');
+
+    createVariable(`${style.name}/lineHeight`, textCollection, modeId, lineHeightValue, 'FLOAT');
 }
 
     });
